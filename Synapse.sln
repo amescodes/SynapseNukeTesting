@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32929.385
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Synapse.Revit", "Synapse.Revit\Synapse.Revit.csproj", "{7A560453-820D-4257-ADF5-C243E5BCC40D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Synapse.Client", "Synapse.Client\Synapse.Client.csproj", "{B26E6C92-F5D3-48DE-9993-6933B74C06AE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7A560453-820D-4257-ADF5-C243E5BCC40D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A560453-820D-4257-ADF5-C243E5BCC40D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A560453-820D-4257-ADF5-C243E5BCC40D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A560453-820D-4257-ADF5-C243E5BCC40D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B26E6C92-F5D3-48DE-9993-6933B74C06AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B26E6C92-F5D3-48DE-9993-6933B74C06AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B26E6C92-F5D3-48DE-9993-6933B74C06AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B26E6C92-F5D3-48DE-9993-6933B74C06AE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {85B25734-3B3D-4802-89B6-5141CA64BB46}
+	EndGlobalSection
+EndGlobal

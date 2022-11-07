@@ -1,0 +1,46 @@
+﻿<Project DefaultTargets="Build" Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<Configurations>Debug;Release</Configurations>
+		<RuntimeIdentifiers>win</RuntimeIdentifiers>
+		<TargetFrameworks>net48</TargetFrameworks>
+		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+		<EnableDefaultItems>false</EnableDefaultItems>
+		<AssemblyName>Synapse.Revit</AssemblyName>
+		<RootNamespace>Synapse.Revit</RootNamespace>
+		<DebugType>full</DebugType>
+		<LangVersion>latest</LangVersion>
+	</PropertyGroup>
+	<ItemGroup>
+		<Reference Include="PresentationCore" />
+		<Reference Include="PresentationFramework" />
+		<Reference Include="System.Windows.Forms" />
+		<Reference Include="System.Xaml" />
+		<Reference Include="WindowsBase" />
+	</ItemGroup>
+	<ItemGroup Condition="$(DefineConstants.Contains('WINFORMS'))">
+		<Reference Include="System.Windows.Forms" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="IRevitSynapse.cs" />
+		<Compile Include="SynapseRevitMethodAttribute.cs" />
+		<Compile Include="SynapseRevitException.cs" />
+		<Compile Include="SynapseRevitService.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Google.Protobuf" Version="3.21.9" />
+		<PackageReference Include="Grpc.Core" Version="2.46.5" />
+		<PackageReference Include="Grpc.Tools" Version="2.50.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+	</ItemGroup>
+
+
+	<ItemGroup>
+		<Protobuf Include="..\Protos\revit.proto" GrpcServices="Server" Link="Protos\revit.proto" />
+	</ItemGroup>
+
+</Project>
