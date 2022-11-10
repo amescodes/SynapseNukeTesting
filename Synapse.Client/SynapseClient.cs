@@ -14,7 +14,8 @@ namespace Synapse
         public static SynapseClient StartSynapseClient(string appName)
         {
             SynapseClient synapseClient = new SynapseClient();
-            synapseClient.channel = new Channel($"127.0.0.1:7221", ChannelCredentials.Insecure);
+            
+            synapseClient.channel = new Channel($"127.0.0.1:6902", ChannelCredentials.Insecure);
             synapseClient.revitRunner = new RevitRunner.RevitRunnerClient(synapseClient.channel);
 
             return synapseClient;

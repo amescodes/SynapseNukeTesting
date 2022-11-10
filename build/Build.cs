@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using NuGet.Versioning;
 using Nuke.Common;
 using Nuke.Common.CI;
 using Nuke.Common.Execution;
@@ -23,11 +24,13 @@ class Build : NukeBuild
     [Solution(GenerateProjects = true)]
     readonly Solution Solution;
 
-    [GitVersion]
+    [GitVersion(UpdateAssemblyInfo = true, UpdateBuildNumber = true)]
     readonly GitVersion GitVersion;
 
-    [GitRepository] readonly GitRepository GitRepository;
+    string Version => GitVersion.NuGetVersionV2;
 
+    [GitRepository] 
+    readonly GitRepository GitRepository;
 
     public static int Main() => Execute<Build>(x => x.Compile);
 
@@ -81,7 +84,7 @@ class Build : NukeBuild
                 .SetDescription("Client package for Revit Synapse library.")
                 .SetPackageTags("revit grpc client server communication")
                 .SetNoDependencies(true)
-                .SetVersion(GitVersion.NuGetVersionV2)
+                .SetVersion(Version)
                 .SetOutputDirectory(Path.Combine(OutputDirectory, "nuget")));
 
             Project synapseServer = Solution.Synapse_Revit;
@@ -94,8 +97,8 @@ class Build : NukeBuild
                 .SetPackageProjectUrl("https://github.com/amescodes/Synapse")
                 .SetDescription("Server package for Revit Synapse library. This package should be loaded into the Revit addin.")
                 .SetPackageTags("revit grpc client server communication")
-                .SetVersion(GitVersion.NuGetVersionV2)
                 .SetNoDependencies(true)
+                .SetVersion(Version)
                 .SetOutputDirectory(Path.Combine(OutputDirectory, "nuget")));
         });
 }

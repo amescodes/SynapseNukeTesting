@@ -11,8 +11,10 @@ namespace Synapse.Revit
 {
     public class SynapseRevitService : RevitRunner.RevitRunnerBase
     {
-        private IRevitSynapse _revitSynapse;
+        private int portNumber;
+        private ServerServiceDefinition serviceDefinition;
 
+        private IRevitSynapse _revitSynapse;
         public Dictionary<int,MethodInfo> SynapseMethodDictionary { get; } =
             new Dictionary<int, MethodInfo>();
 
@@ -70,25 +72,21 @@ namespace Synapse.Revit
                 }
             }
         }
-        
-        private Server StartRevitRunnerServer(string host, int port)
+
+        public void ShutdownSynapseRevitService()
         {
-            // start grpc server
-            Server server = new Server
-            {
-                Services = { RevitRunner.BindService(this) },                
-                Ports = { new ServerPort(host, port, ServerCredentials.Insecure) }
-            };
-            server.Start();
-
-            return server;
+            SynapseRevitState.RemoveServiceFromServer(serviceDefinition,portNumber);
         }
-
+        
         public static SynapseRevitService StartSynapseRevitService(IRevitSynapse synapse, Assembly assembly)
         {
             SynapseRevitService service = new SynapseRevitService(synapse);
             service.MakeRevitCommandRunnerDictionary(assembly);
-            service.StartRevitRunnerServer($"localhost",7221);
+
+            Task<(ServerServiceDefinition, int)> serverService = SynapseRevitState.AddServiceToServer(service);
+            serverService.Wait();
+            (service.serviceDefinition, service.portNumber) = serverService.Result;
+
             return service;
         }
     }
