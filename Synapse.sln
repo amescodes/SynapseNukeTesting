@@ -7,12 +7,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Synapse.Revit", "Synapse.Re
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Synapse.Client", "Synapse.Client\Synapse.Client.csproj", "{B26E6C92-F5D3-48DE-9993-6933B74C06AE}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "build", "build\build.csproj", "{1906C717-8470-472D-BF1E-AC80E4ECF6C1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1906C717-8470-472D-BF1E-AC80E4ECF6C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1906C717-8470-472D-BF1E-AC80E4ECF6C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A560453-820D-4257-ADF5-C243E5BCC40D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7A560453-820D-4257-ADF5-C243E5BCC40D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A560453-820D-4257-ADF5-C243E5BCC40D}.Release|Any CPU.ActiveCfg = Release|Any CPU

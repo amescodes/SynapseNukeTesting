@@ -4,13 +4,13 @@ namespace Synapse.Revit
 {
     public class SynapseRevitMethodAttribute : Attribute
     {
-        public string MethodToRun { get; }
+        public int MethodIdToRun { get; }
         public Type[] InputVariableTypes { get; }
         public Type OutputVariableType { get; }
 
-        public SynapseRevitMethodAttribute(string methodToRun, Type outputVariableType, params Type[] inputVariableTypes)
+        public SynapseRevitMethodAttribute(int methodIdToRun, Type outputVariableType, params Type[] inputVariableTypes)
         {
-            MethodToRun = methodToRun;
+            MethodIdToRun = methodIdToRun;
             OutputVariableType = outputVariableType;
             InputVariableTypes = inputVariableTypes;
         }

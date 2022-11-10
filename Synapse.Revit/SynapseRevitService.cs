@@ -13,8 +13,8 @@ namespace Synapse.Revit
     {
         private IRevitSynapse _revitSynapse;
 
-        public Dictionary<string,MethodInfo> SynapseMethodDictionary { get; } =
-            new Dictionary<string, MethodInfo>();
+        public Dictionary<int,MethodInfo> SynapseMethodDictionary { get; } =
+            new Dictionary<int, MethodInfo>();
 
         private SynapseRevitService(IRevitSynapse revitSynapse)
         {
@@ -24,7 +24,7 @@ namespace Synapse.Revit
         public override Task<SynapseOutput> DoRevit(SynapseRequest request, ServerCallContext context)
         {
             //MethodInfo method = RevitRunnerCommandDictionary[commandEnum];
-            if (!SynapseMethodDictionary.TryGetValue(request.MethodName, out MethodInfo method))
+            if (!SynapseMethodDictionary.TryGetValue(request.MethodId, out MethodInfo method))
             {
                 throw new SynapseRevitException("Method not found in SynapseMethodDictionary!");
             }
@@ -66,7 +66,7 @@ namespace Synapse.Revit
                         continue;
                     }
 
-                    SynapseMethodDictionary.Add(revitCommandAttribute.MethodToRun, method);
+                    SynapseMethodDictionary.Add(revitCommandAttribute.MethodIdToRun, method);
                 }
             }
         }
@@ -76,7 +76,7 @@ namespace Synapse.Revit
             // start grpc server
             Server server = new Server
             {
-                Services = { RevitRunner.BindService(this) },
+                Services = { RevitRunner.BindService(this) },                
                 Ports = { new ServerPort(host, port, ServerCredentials.Insecure) }
             };
             server.Start();
@@ -88,7 +88,7 @@ namespace Synapse.Revit
         {
             SynapseRevitService service = new SynapseRevitService(synapse);
             service.MakeRevitCommandRunnerDictionary(assembly);
-            service.StartRevitRunnerServer($"synapse-{synapse.AppName}",7221);
+            service.StartRevitRunnerServer($"localhost",7221);
             return service;
         }
     }
