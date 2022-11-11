@@ -125,12 +125,12 @@ namespace Synapse.Revit
         public static SynapseRevitService StartSynapseRevitService(IRevitSynapse synapse)
         {
             SynapseRevitService service = new SynapseRevitService(synapse);
-
-            Assembly assembly = Assembly.GetAssembly(typeof(IRevitSynapse));
+            
+            Assembly assembly = Assembly.GetAssembly(synapse.GetType());
             service.MakeRevitCommandRunnerDictionary(assembly);
 
             Task<(ServerServiceDefinition, int)> serverService = SynapseRevitState.AddServiceToServer(service);
-            serverService.Wait();
+            serverService.Wait(TimeSpan.FromSeconds(10));
             (service.serviceDefinition, service.portNumber) = serverService.Result;
 
             return service;
