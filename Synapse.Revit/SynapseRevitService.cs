@@ -78,13 +78,14 @@ namespace Synapse.Revit
         public void ShutdownSynapseRevitService()
         {
             SynapseRevitState.RemoveServiceFromServer(serviceDefinition,portNumber);
+            
+            Process processById = ProcessUtil.GetProcessById(processId);
+            processById?.Kill();
         }
 
-        public Process StartProcess(string processPath)
+        public Process StartProcess()
         {
-            Process process = ProcessUtil.StartProcess(processPath, portNumber);
-            process.Exited += ProcessOnExited;
-            return process;
+            return ProcessUtil.StartProcess(_revitSynapse.ProcessPath,portNumber);
         }
 
         public bool ActivateProcess()
@@ -111,7 +112,7 @@ namespace Synapse.Revit
                 throw new SynapseRevitException("An error occurred during process close. See InnerException for more details.", ex);
             }
         }
-
+        
         /// <summary>
         /// Use to create a Synapse in the Revit addin component of the application. Once this is started, use <see cref="StartProcess"/> with a path
         /// to the process executable to start the outer process component of the application (typically the UI).
