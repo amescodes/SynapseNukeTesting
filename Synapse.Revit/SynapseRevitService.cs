@@ -81,6 +81,8 @@ namespace Synapse.Revit
             
             Process processById = ProcessUtil.GetProcessById(processId);
             processById?.Kill();
+
+            SynapseRevitState.GrpcServer.ShutdownAsync();
         }
 
         public Process StartProcess()
