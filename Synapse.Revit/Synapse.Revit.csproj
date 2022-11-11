@@ -33,6 +33,7 @@
 		<Compile Include="SynapseRevitMethodAttribute.cs" />
 		<Compile Include="SynapseRevitException.cs" />
 		<Compile Include="SynapseRevitService.cs" />
+		<Compile Include="ProcessUtil.cs" />
 	</ItemGroup>
 
 	<ItemGroup>

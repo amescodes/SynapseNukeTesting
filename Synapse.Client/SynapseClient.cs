@@ -11,11 +11,11 @@ namespace Synapse
 
         private SynapseClient(){}
 
-        public static SynapseClient StartSynapseClient()
+        public static SynapseClient StartSynapseClient(int portNumber)
         {
             SynapseClient synapseClient = new SynapseClient();
             
-            synapseClient.channel = new Channel($"127.0.0.1:6902", ChannelCredentials.Insecure);
+            synapseClient.channel = new Channel($"127.0.0.1:{portNumber}", ChannelCredentials.Insecure);
             synapseClient.revitRunner = new RevitRunner.RevitRunnerClient(synapseClient.channel);
 
             return synapseClient;

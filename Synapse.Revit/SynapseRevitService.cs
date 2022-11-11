@@ -16,11 +16,9 @@ namespace Synapse.Revit
         private int portNumber;
         private ServerServiceDefinition serviceDefinition;
 
-        private IRevitSynapse _revitSynapse;
         private int processId;
-
-        public Dictionary<int,MethodInfo> SynapseMethodDictionary { get; } =
-            new Dictionary<int, MethodInfo>();
+        private IRevitSynapse _revitSynapse;
+        private Dictionary<int,MethodInfo> synapseMethodDictionary = new Dictionary<int, MethodInfo>();
 
         private SynapseRevitService(IRevitSynapse revitSynapse)
         {
@@ -30,7 +28,7 @@ namespace Synapse.Revit
         public override Task<SynapseOutput> DoRevit(SynapseRequest request, ServerCallContext context)
         {
             //MethodInfo method = RevitRunnerCommandDictionary[commandEnum];
-            if (!SynapseMethodDictionary.TryGetValue(request.MethodId, out MethodInfo method))
+            if (!synapseMethodDictionary.TryGetValue(request.MethodId, out MethodInfo method))
             {
                 throw new SynapseRevitException("Method not found in SynapseMethodDictionary!");
             }
@@ -72,68 +70,43 @@ namespace Synapse.Revit
                         continue;
                     }
 
-                    SynapseMethodDictionary.Add(revitCommandAttribute.MethodIdToRun, method);
+                    synapseMethodDictionary.Add(revitCommandAttribute.MethodIdToRun, method);
                 }
             }
         }
-        
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool SetForegroundWindow(IntPtr hWnd);
 
-        public Process StartProcess(IntPtr revitWindowHandle)
-        {
-            // if the browser window/process is already open, activate it instead of opening a new process 
-            if (processId != 0)
-            {
-                // the following line could be enough, but rather activate the window thru the process
-                //SetForegroundWindow(processHwnd);
-
-                return GetProcessById(processId);
-            }
-
-            // execute the browser window process
-            Process process = new Process();
-            process.StartInfo.FileName = _revitSynapse.ProcessPath;
-            process.StartInfo.Arguments = revitWindowHandle.ToString(); // pass the MessageHandler's window handle the the process as a command line argument
-            process.Start();
-            
-            processId = process.Id; // grab the PID so we can kill the process if required;
-            
-            return process;
-        }
-
-        public bool ActivateProcessAndMakeForeground(Process p)
-        {
-            if (p == null)
-            {
-                throw new SynapseRevitException("Process is null.");
-            }
-
-            IntPtr windowHandle = p.MainWindowHandle;
-            return SetForegroundWindow(windowHandle);
-        }
-
-        private Process GetProcessById(int id)
-        {
-            Process[] processes = Process.GetProcesses();
-
-            foreach (Process p in processes)
-            {
-                if (p.Id == id)
-                {
-                    return p;
-                }
-            }
-
-            return null;
-        }
-        
         public void ShutdownSynapseRevitService()
         {
             SynapseRevitState.RemoveServiceFromServer(serviceDefinition,portNumber);
         }
+
+        public Process StartProcess(string processPath)
+        {
+            Process process = ProcessUtil.StartProcess(processPath, portNumber);
+            process.Exited += ProcessOnExited;
+            return process;
+        }
         
+        private void ProcessOnExited(object sender, EventArgs e)
+        {
+            try
+            {
+                ShutdownSynapseRevitService();
+                ProcessUtil.GetProcessById(processId).Exited -= ProcessOnExited;
+            }
+            catch (Exception ex)
+            {
+                // should something throw here?
+                throw new SynapseRevitException("An error occurred during process close. See InnerException for more details.", ex);
+            }
+        }
+
+        /// <summary>
+        /// Use to create a Synapse in the Revit addin component of the application. Once this is started, use <see cref="StartProcess"/> with a path
+        /// to the process executable to start the outer process component of the application (typically the UI).
+        /// </summary>
+        /// <param name="synapse"></param>
+        /// <returns></returns>
         public static SynapseRevitService StartSynapseRevitService(IRevitSynapse synapse)
         {
             SynapseRevitService service = new SynapseRevitService(synapse);
