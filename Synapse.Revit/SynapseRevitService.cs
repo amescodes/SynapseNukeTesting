@@ -85,7 +85,10 @@ namespace Synapse.Revit
 
         public Process StartProcess()
         {
-            return ProcessUtil.StartProcess(_revitSynapse.ProcessPath,portNumber);
+            Process process =  ProcessUtil.StartProcess(_revitSynapse.ProcessPath,portNumber);
+            process.Exited += ProcessOnExited;
+
+            return process;
         }
 
         public bool ActivateProcess()
@@ -114,8 +117,8 @@ namespace Synapse.Revit
         }
         
         /// <summary>
-        /// Use to create a Synapse in the Revit addin component of the application. Once this is started, use <see cref="StartProcess"/> with a path
-        /// to the process executable to start the outer process component of the application (typically the UI).
+        /// Use to create a Synapse in the Revit addin component of the application. Once this is started,
+        /// use <see cref="StartProcess"/> to start the outer process component of the application (typically the UI).
         /// </summary>
         /// <param name="synapse"></param>
         /// <returns></returns>
