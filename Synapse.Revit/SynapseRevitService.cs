@@ -86,7 +86,18 @@ namespace Synapse.Revit
             process.Exited += ProcessOnExited;
             return process;
         }
-        
+
+        public bool ActivateProcess()
+        {
+            Process process = ProcessUtil.GetProcessById(processId);
+            if (process == null)
+            {
+                throw new SynapseRevitException("process is null!");
+            }
+
+            return ProcessUtil.ActivateProcessAndMakeForeground(process);
+        }
+
         private void ProcessOnExited(object sender, EventArgs e)
         {
             try
