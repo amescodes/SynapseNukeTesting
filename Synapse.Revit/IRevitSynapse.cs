@@ -8,6 +8,9 @@ namespace Synapse.Revit
 {
     public interface IRevitSynapse
     {
-        string AppName { get; }
+        /// <summary>
+        /// Path of the process to open and connect with this synapse.
+        /// </summary>
+        string ProcessPath { get; }
     }
 }

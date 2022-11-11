@@ -11,7 +11,7 @@ namespace Synapse
 
         private SynapseClient(){}
 
-        public static SynapseClient StartSynapseClient(string appName)
+        public static SynapseClient StartSynapseClient()
         {
             SynapseClient synapseClient = new SynapseClient();
             
