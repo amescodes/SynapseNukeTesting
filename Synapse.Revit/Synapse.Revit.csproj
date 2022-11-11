@@ -9,6 +9,12 @@
 		<RootNamespace>Synapse.Revit</RootNamespace>
 		<DebugType>full</DebugType>
 		<LangVersion>latest</LangVersion>
+		<Title>Synapse Revit</Title>
+		<PackageProjectUrl></PackageProjectUrl>
+		<Description>Inter-process communication for Revit using gRPC.</Description>
+		<Copyright>Copyright © 2022 ames codes</Copyright>
+		<PackageReadmeFile></PackageReadmeFile>
+		<RepositoryUrl>https://github.com/amescodes/Synapse</RepositoryUrl>
 	</PropertyGroup>
 	<ItemGroup>
 		<Reference Include="PresentationCore" />
