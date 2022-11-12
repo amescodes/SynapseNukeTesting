@@ -7,7 +7,7 @@ using Grpc.Core;
 
 namespace Synapse.Revit
 {
-    internal static class SynapseRevitState
+    internal static class SynapseServerState
     {
         internal static Server GrpcServer { get; private set; }
 

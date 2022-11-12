@@ -77,12 +77,12 @@ namespace Synapse.Revit
 
         public void ShutdownSynapseRevitService()
         {
-            SynapseRevitState.RemoveServiceFromServer(serviceDefinition,portNumber);
+            SynapseServerState.RemoveServiceFromServer(serviceDefinition,portNumber);
             
             Process processById = ProcessUtil.GetProcessById(processId);
             processById?.Kill();
 
-            SynapseRevitState.GrpcServer.ShutdownAsync();
+            SynapseServerState.GrpcServer.ShutdownAsync();
         }
 
         public Process StartProcess()
@@ -131,7 +131,7 @@ namespace Synapse.Revit
             Assembly assembly = Assembly.GetAssembly(synapse.GetType());
             service.MakeRevitCommandRunnerDictionary(assembly);
 
-            Task<(ServerServiceDefinition, int)> serverService = SynapseRevitState.AddServiceToServer(service);
+            Task<(ServerServiceDefinition, int)> serverService = SynapseServerState.AddServiceToServer(service);
             serverService.Wait(TimeSpan.FromSeconds(10));
             (service.serviceDefinition, service.portNumber) = serverService.Result;
 
