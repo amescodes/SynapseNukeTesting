@@ -34,7 +34,7 @@ namespace Synapse.Revit
             }
             else
             {
-                await GrpcServer.ShutdownAsync();
+                await GrpcServer.KillAsync();
 
                 port = GrpcServer.Ports.Last().BoundPort;
 
@@ -52,7 +52,7 @@ namespace Synapse.Revit
             Server.ServiceDefinitionCollection serviceDefinitionCollection = GrpcServer.Services;
             Server.ServerPortCollection serverPortCollection = GrpcServer.Ports;
             
-            await GrpcServer.ShutdownAsync();
+            await GrpcServer.KillAsync();
             
             GrpcServer = new Server();
 
@@ -67,7 +67,6 @@ namespace Synapse.Revit
             {
                 GrpcServer.Ports.Add(serverPort);
             }
-
 
             GrpcServer.Start(); 
         }
