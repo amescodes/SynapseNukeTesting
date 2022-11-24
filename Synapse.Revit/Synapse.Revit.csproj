@@ -9,6 +9,12 @@
 		<RootNamespace>Synapse.Revit</RootNamespace>
 		<DebugType>full</DebugType>
 		<LangVersion>latest</LangVersion>
+		<Title>Synapse Revit</Title>
+		<PackageProjectUrl></PackageProjectUrl>
+		<Description>Inter-process communication for Revit using gRPC.</Description>
+		<Copyright>Copyright © 2022 ames codes</Copyright>
+		<PackageReadmeFile></PackageReadmeFile>
+		<RepositoryUrl>https://github.com/amescodes/Synapse</RepositoryUrl>
 	</PropertyGroup>
 	<ItemGroup>
 		<Reference Include="PresentationCore" />
@@ -23,14 +29,17 @@
 
 	<ItemGroup>
 		<Compile Include="IRevitSynapse.cs" />
+		<Compile Include="SynapseProcess.cs" />
 		<Compile Include="SynapseRevitMethodAttribute.cs" />
 		<Compile Include="SynapseRevitException.cs" />
 		<Compile Include="SynapseRevitService.cs" />
+		<Compile Include="ProcessUtil.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Google.Protobuf" Version="3.21.9" />
 		<PackageReference Include="Grpc.Core" Version="2.46.5" />
+		<PackageReference Include="Grpc.Reflection" Version="2.50.0" />
 		<PackageReference Include="Grpc.Tools" Version="2.50.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
