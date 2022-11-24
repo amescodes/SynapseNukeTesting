@@ -11,7 +11,7 @@ service RevitRunner {
 }
 
 message SynapseRequest {
-  int32 method_id = 1;
+  string method_id = 1;
   string method_input_json = 2;
 }
 

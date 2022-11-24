@@ -10,7 +10,7 @@ namespace Synapse.Revit
 {
     public static class ProcessUtil
     {
-        public static Process GetProcessById(int id)
+        internal static Process GetProcessById(int id)
         {
             Process[] processes = Process.GetProcesses();
 
@@ -25,18 +25,18 @@ namespace Synapse.Revit
             return null;
         }
         
-        internal static Process StartProcess(string processPath, int portNumber)
+        internal static Process StartProcess(string processPath)
         {
             // execute the browser window process
             Process process = new Process();
             process.StartInfo.FileName = processPath;
-            process.StartInfo.Arguments = portNumber.ToString(); // pass the gRPC port number to the process as a command line argument
+            //process.StartInfo.Arguments = portNumber.ToString(); // pass the gRPC port number to the process as a command line argument
 
             process.Start();
             
             return process;
         }
-        
+
         internal static bool ActivateProcessAndMakeForeground(Process p)
         {
             if (p == null)
@@ -51,5 +51,7 @@ namespace Synapse.Revit
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool SetForegroundWindow(IntPtr hWnd);
+
+
     }
 }

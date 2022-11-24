@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Grpc.Core;
+using Newtonsoft.Json;
 
 namespace Synapse
 {
@@ -10,14 +11,42 @@ namespace Synapse
 
         private SynapseClient(){}
 
-        public static SynapseClient StartSynapseClient(int portNumber)
+        public static SynapseClient StartSynapseClient()
         {
             SynapseClient synapseClient = new SynapseClient();
             
-            synapseClient.channel = new Channel($"127.0.0.1:{portNumber}", ChannelCredentials.Insecure);
+            synapseClient.channel = new Channel($"127.0.0.1:7221", ChannelCredentials.Insecure);
             synapseClient.revitRunner = new RevitRunner.RevitRunnerClient(synapseClient.channel);
 
             return synapseClient;
+        }
+
+        public TOut DoRevit<TOut>(string methodId, params object[] inputs)
+        {
+            string inputAsJsonString = JsonConvert.SerializeObject(inputs);
+
+            SynapseOutput response = DoRevit(new SynapseRequest() { MethodId = methodId, MethodInputJson = inputAsJsonString });
+            TOut deserializeObject = JsonConvert.DeserializeObject<TOut>(response.MethodOutputJson);
+            if (deserializeObject == null)
+            {
+                throw new SynapseException($"Couldn't deserialize Revit response to type {typeof(TOut)}.");
+            }
+
+            return deserializeObject;
+        }
+
+        public async Task<TOut> DoRevitAsync<TOut>(string methodId, params object[] inputs)
+        {
+            string inputAsJsonString = JsonConvert.SerializeObject(inputs);
+
+            SynapseOutput response = await DoRevitAsync(new SynapseRequest() { MethodId = methodId, MethodInputJson = inputAsJsonString });
+            TOut deserializeObject = JsonConvert.DeserializeObject<TOut>(response.MethodOutputJson);
+            if (deserializeObject == null)
+            {
+                throw new SynapseException($"Couldn't deserialize Revit response to type {typeof(TOut)}.");
+            }
+
+            return deserializeObject;
         }
 
         public SynapseOutput DoRevit(SynapseRequest request)
