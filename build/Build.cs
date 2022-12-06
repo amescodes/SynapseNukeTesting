@@ -4,6 +4,7 @@ using System.Linq;
 using NuGet.Versioning;
 using Nuke.Common;
 using Nuke.Common.CI;
+using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Execution;
 using Nuke.Common.Git;
 using Nuke.Common.IO;
@@ -19,18 +20,30 @@ using static Nuke.Common.IO.PathConstruction;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 using static Nuke.Common.Tools.NuGet.NuGetTasks;
 
+[GitHubActions(
+    name:"cicd-nuget",
+    GitHubActionsImage.WindowsLatest,
+    On = new [] { GitHubActionsTrigger.Push },
+    OnPushBranches = new []{"main","develop"},
+    InvokedTargets = new []{nameof(Pack)},
+    ImportSecrets = new []{nameof(SYNAPSE_NUGET_API_KEY)},
+    EnableGitHubToken = true,
+    PublishArtifacts = true)
+]
 class Build : NukeBuild
 {
     [Solution(GenerateProjects = true)]
     readonly Solution Solution;
+
+    [Secret] [Parameter] readonly string SYNAPSE_NUGET_API_KEY;
 
     [GitVersion(UpdateAssemblyInfo = true, UpdateBuildNumber = true)]
     readonly GitVersion GitVersion;
 
     string Version => GitVersion.NuGetVersionV2;
 
-    [GitRepository] 
-    readonly GitRepository GitRepository;
+    //[GitRepository] 
+    //readonly GitRepository GitRepository;
 
     public static int Main() => Execute<Build>(x => x.Compile);
 
