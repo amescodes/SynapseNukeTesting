@@ -24,6 +24,7 @@ using NuGet.Versioning;
 [GitHubActions(
     name: "cicd",
     GitHubActionsImage.WindowsLatest,
+    FetchDepth = 0,
     OnPushBranches = new[] { "main", "develop" },
     InvokedTargets = new[] { nameof(Build.Pack) },
     ImportSecrets = new[] { nameof(SYNAPSE_NUGET_API_KEY) },
@@ -84,11 +85,13 @@ class Build : NukeBuild
             Project synapseClient = Solution.GetProject("Synapse.Client");
             DotNetBuild(_ => _
                 .SetProjectFile(synapseClient)
+                .SetNoRestore(true)
                 .SetConfiguration(Configuration));
 
             Project synapseServer = Solution.GetProject("Synapse.Revit");
             DotNetBuild(_ => _
                 .SetProjectFile(synapseServer)
+                .SetNoRestore(true)
                 .SetConfiguration(Configuration));
             MergeRevitServerDllsWithILRepack();
         });

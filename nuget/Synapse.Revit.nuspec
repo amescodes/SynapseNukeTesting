@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
   <metadata>
     <id>Synapse.Revit</id>
-    <version>0.1.1-alpha0023</version>
+    <version>0.1.1-alpha0028</version>
     <authors>ames codes</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <icon>icon.png</icon>
