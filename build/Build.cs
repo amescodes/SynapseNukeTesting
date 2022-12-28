@@ -1,44 +1,36 @@
-using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Linq;
-using GlobExpressions;
-using NuGet.Configuration;
-using NuGet.Frameworks;
-using NuGet.Packaging;
-using NuGet.Packaging.Core;
-using NuGet.Versioning;
+
 using Nuke.Common;
-using Nuke.Common.CI;
-using Nuke.Common.Execution;
-using Nuke.Common.Git;
+using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
-using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Tools.ILRepack;
-using Nuke.Common.Tools.MSBuild;
 using Nuke.Common.Tools.NuGet;
 using Nuke.Common.Utilities.Collections;
-using static Nuke.Common.EnvironmentInfo;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.IO.PathConstruction;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 using static Nuke.Common.Tools.ILRepack.ILRepackTasks;
 using static Nuke.Common.Tools.NuGet.NuGetTasks;
 
+using NuGet.Packaging;
+using NuGet.Packaging.Core;
+using NuGet.Versioning;
+
 [GitHubActions(
-    name: "cicd-nuget",
+    name: "cicd",
     GitHubActionsImage.WindowsLatest,
-    On = new[] { GitHubActionsTrigger.Push },
+    //On = new [] { GitHubActionsTrigger.Push },
     OnPushBranches = new[] { "main", "develop" },
-    InvokedTargets = new[] { nameof(Pack) },
+    InvokedTargets = new[] { nameof(Build.Pack) },
     ImportSecrets = new[] { nameof(SYNAPSE_NUGET_API_KEY) },
     EnableGitHubToken = true,
-    PublishArtifacts = true)
-]
+    PublishArtifacts = true
+    )]
 class Build : NukeBuild
 {
     [Solution(GenerateProjects = true)]
@@ -57,7 +49,7 @@ class Build : NukeBuild
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
 
-    AbsolutePath ClientDirectory => RootDirectory / "Synapse";
+    AbsolutePath ClientDirectory => RootDirectory / "Synapse.Client";
     AbsolutePath ServerDirectory => RootDirectory / "Synapse.Revit";
 
     AbsolutePath NugetOutputDirectory => RootDirectory / "nuget";
@@ -83,7 +75,8 @@ class Build : NukeBuild
     Target Compile => _ => _
         .DependsOn(Restore)
         .Before(Pack)
-        .Produces("*.dll")
+        .Produces(ClientDirectory / "**/*.dll")
+        .Produces(ServerDirectory / "**/*.dll")
         .Executes(() =>
         {
             Project synapseClient = Solution.Synapse_Client;
@@ -100,8 +93,7 @@ class Build : NukeBuild
 
     Target Pack => _ => _
         .DependsOn(Compile)
-        .Consumes(Compile, "*.dll")
-        .Produces(NugetOutputDirectory / "*.nupkg")
+        .Consumes(Compile)
         .Executes(() =>
         {
             string iconFileName = "icon.png";
