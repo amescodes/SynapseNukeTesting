@@ -24,16 +24,16 @@ using NuGet.Versioning;
 [GitHubActions(
     name: "cicd",
     GitHubActionsImage.WindowsLatest,
-    //On = new [] { GitHubActionsTrigger.Push },
     OnPushBranches = new[] { "main", "develop" },
     InvokedTargets = new[] { nameof(Build.Pack) },
     ImportSecrets = new[] { nameof(SYNAPSE_NUGET_API_KEY) },
     EnableGitHubToken = true,
-    PublishArtifacts = true
-    )]
+    PublishArtifacts = true,
+    CacheKeyFiles = new[] { "global.json", "./**/*.csproj" }
+)]
 class Build : NukeBuild
 {
-    [Solution(GenerateProjects = true)]
+    [Solution]
     readonly Solution Solution;
 
     [Secret][Parameter] readonly string SYNAPSE_NUGET_API_KEY;
@@ -67,9 +67,11 @@ class Build : NukeBuild
         .Executes(() =>
         {
             DotNetRestore(_ => _
-                .SetProjectFile(Solution.Synapse_Client));
-            DotNetRestore(_ => _
-                .SetProjectFile(Solution.Synapse_Revit));
+                .SetProjectFile(Solution));
+            //DotNetRestore(_ => _
+            //    .SetProjectFile(ClientDirectory / "Synapse.Client.csproj"));
+            //DotNetRestore(_ => _
+            //    .SetProjectFile(ServerDirectory / "Synapse.Revit.csproj"));
         });
 
     Target Compile => _ => _
@@ -79,12 +81,12 @@ class Build : NukeBuild
         .Produces(ServerDirectory / "**/*.dll")
         .Executes(() =>
         {
-            Project synapseClient = Solution.Synapse_Client;
+            Project synapseClient = Solution.GetProject("Synapse.Client");
             DotNetBuild(_ => _
                 .SetProjectFile(synapseClient)
                 .SetConfiguration(Configuration));
 
-            Project synapseServer = Solution.Synapse_Revit;
+            Project synapseServer = Solution.GetProject("Synapse.Revit");
             DotNetBuild(_ => _
                 .SetProjectFile(synapseServer)
                 .SetConfiguration(Configuration));
@@ -109,8 +111,9 @@ class Build : NukeBuild
             }
 
             // client
+            Project synapseClient = Solution.GetProject("Synapse.Client");
             DotNetPack(_ => _
-                .SetProject(Solution.Synapse_Client)
+                .SetProject(synapseClient)
                 .SetConfiguration(Configuration)
                 .EnableNoBuild()
                 .EnableNoRestore()
