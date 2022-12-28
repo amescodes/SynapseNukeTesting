@@ -188,7 +188,8 @@ class Build : NukeBuild
 
     void MergeRevitServerDllsWithILRepack()
     {
-        IReadOnlyCollection<string> serverBuildDirStr = GlobDirectories(ServerDirectory, $"bin/{Configuration}/**");
+        IReadOnlyCollection<string> serverBuildDirStr = GlobDirectories(ServerDirectory, $"**/**");
+        //IReadOnlyCollection<string> serverBuildDirStr = GlobDirectories(ServerDirectory, $"bin/{Configuration}/**");
         AbsolutePath serverBuildDir = (AbsolutePath)serverBuildDirStr.MaxBy(p => p.Length);
         //AbsolutePath serverBuildDir = ServerDirectory / "bin/*/";
         AbsolutePath synapseDllFile = serverBuildDir / "Synapse.Revit.dll";
