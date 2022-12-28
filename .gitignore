@@ -364,6 +364,3 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-/build.sh
-/build.ps1
-/build.cmd
