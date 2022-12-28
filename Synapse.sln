@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Synapse.Revit", "Synapse.Re
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Synapse.Client", "Synapse.Client\Synapse.Client.csproj", "{B26E6C92-F5D3-48DE-9993-6933B74C06AE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "build", "build\build.csproj", "{1906C717-8470-472D-BF1E-AC80E4ECF6C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "build\_build.csproj", "{67D4CC93-D216-4641-896D-AF7FF3D30181}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,8 +23,8 @@ Global
 		{B26E6C92-F5D3-48DE-9993-6933B74C06AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B26E6C92-F5D3-48DE-9993-6933B74C06AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B26E6C92-F5D3-48DE-9993-6933B74C06AE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1906C717-8470-472D-BF1E-AC80E4ECF6C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1906C717-8470-472D-BF1E-AC80E4ECF6C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67D4CC93-D216-4641-896D-AF7FF3D30181}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67D4CC93-D216-4641-896D-AF7FF3D30181}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
