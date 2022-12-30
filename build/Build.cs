@@ -99,6 +99,7 @@ class Build : NukeBuild
     Target Pack => _ => _
         .DependsOn(Compile)
         .Consumes(Compile)
+        .Produces(NugetOutputDirectory / "*.nupkg")
         .Executes(() =>
         {
             string iconFileName = "icon.png";

@@ -50,3 +50,7 @@ jobs:
         with:
           name: Synapse.Revit
           path: Synapse.Revit
+      - uses: actions/upload-artifact@v3
+        with:
+          name: nuget
+          path: nuget
