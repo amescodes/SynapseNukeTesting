@@ -49,10 +49,8 @@ class Build : NukeBuild
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
-
     AbsolutePath ClientDirectory => RootDirectory / "Synapse.Client";
     AbsolutePath ServerDirectory => RootDirectory / "Synapse.Revit";
-
     AbsolutePath NugetOutputDirectory => RootDirectory / "nuget";
 
     Target Clean => _ => _
@@ -61,6 +59,7 @@ class Build : NukeBuild
         {
             ClientDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
             ServerDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
+
             EnsureCleanDirectory(NugetOutputDirectory);
         });
 
@@ -69,17 +68,13 @@ class Build : NukeBuild
         {
             DotNetRestore(_ => _
                 .SetProjectFile(Solution));
-            //DotNetRestore(_ => _
-            //    .SetProjectFile(ClientDirectory / "Synapse.Client.csproj"));
-            //DotNetRestore(_ => _
-            //    .SetProjectFile(ServerDirectory / "Synapse.Revit.csproj"));
         });
 
     Target Compile => _ => _
         .DependsOn(Restore)
         .Before(Pack)
-        .Produces(ClientDirectory / "**/*.dll")
-        .Produces(ServerDirectory / "**/*.dll")
+        //.Produces(ClientDirectory / "**/*.dll")
+        //.Produces(ServerDirectory / "**/*.dll")
         .Executes(() =>
         {
             Project synapseClient = Solution.GetProject("Synapse.Client");
@@ -138,7 +133,6 @@ class Build : NukeBuild
 
             File.Copy(iconPath, serverBuildDir / iconFileName, true);
 
-            //FrameworkReference[] frameworkReferences = new[] { new FrameworkReference("Synapse.Revit.dll") };
             ManifestMetadata nugetPackageMetadata = new ManifestMetadata()
             {
                 Id = "Synapse.Revit",
@@ -150,7 +144,6 @@ class Build : NukeBuild
                 Version = NuGetVersion.Parse(Version), // sets during pack
                 Repository = new RepositoryMetadata("git", "https://github.com/amescodes/Synapse", "main", ""),
                 Copyright = "Copyright © 2022 ames codes",
-                //ContentFiles = new[] { iconFile }
             };
             Manifest nuspecFile = NuGet.Packaging.Manifest.Create(nugetPackageMetadata);
             nuspecFile.Files.Add(new ManifestFile() { Source = "Synapse.Revit.dll", Target = "lib" });
@@ -175,27 +168,12 @@ class Build : NukeBuild
                 .SetIncludeReferencedProjects(false)
                 .SetVersion(Version)
                 .SetOutputDirectory(NugetOutputDirectory));
-
-            //DotNetPack(_ => _
-            //    .SetProject(Solution.Synapse_Revit)
-            //    .SetConfiguration(Configuration)
-            //    .EnableNoBuild()
-            //    .EnableNoRestore()
-            //    .SetAuthors("ames codes")
-            //    .SetPackageProjectUrl("https://github.com/amescodes/Synapse")
-            //    .SetDescription("Server package for Revit Synapse library. This package should be loaded into the Revit addin.")
-            //    .SetPackageTags("revit grpc client server communication")
-            //    .SetPackageIconUrl(iconPath)
-            //    .SetVersion(Version)
-            //    .SetOutputDirectory(NugetOutputDirectory));
         });
 
     void MergeRevitServerDllsWithILRepack()
     {
         IReadOnlyCollection<string> serverBuildDirStr = GlobDirectories(ServerDirectory, $"**/**");
-        //IReadOnlyCollection<string> serverBuildDirStr = GlobDirectories(ServerDirectory, $"bin/{Configuration}/**");
         AbsolutePath serverBuildDir = (AbsolutePath)serverBuildDirStr.MaxBy(p => p.Length);
-        //AbsolutePath serverBuildDir = ServerDirectory / "bin/*/";
         AbsolutePath synapseDllFile = serverBuildDir / "Synapse.Revit.dll";
         string[] inputAssemblies = new string[]
         {
@@ -203,7 +181,6 @@ class Build : NukeBuild
             serverBuildDir / "Google.Protobuf.dll",
             serverBuildDir / "Grpc.Core.dll",
             serverBuildDir / "Grpc.Core.Api.dll",
-            //serverBuildDir / "grpc_csharp_ext.x64.dll",
             serverBuildDir / "Newtonsoft.Json.dll",
             serverBuildDir / "System.Buffers.dll",
             serverBuildDir / "System.Memory.dll",
